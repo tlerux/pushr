@@ -1,0 +1,28 @@
+
+<%= link_to '<i class="icon-plus"></i> New Business'.html_safe, new_business_path ,:class => "btn btn-large right"%>
+
+<h1>Business Listings</h1>
+
+<table class="table">
+  <tr>
+    <th>Name</th>
+    <th>Phone</th>
+    <th>Distance</th>
+    <th width="220"></th> 
+  </tr>
+
+<% @businesses.each do |business| %>
+  <tr>
+    <td><%= business.name %></td>
+    <td><%= business.phone %></td>
+    <!-- ><td><%= business.address.split(',')[0] %></td>   -->
+    <td class="text-right" style="text-align: center;"><%= business.distance(@lat,@lng) %></td>  
+    <td><%= link_to "<i class='icon-eye-open'></i> View".html_safe, business ,:class => "btn btn-mini"%> 
+     <%= link_to "<i class='icon-edit'></i> Edit".html_safe, edit_business_path(business) ,:class => "btn btn-mini"%> 
+     <%= link_to "<i class='icon-trash icon-white'></i> Delete".html_safe, business, method: :delete, data: { confirm: 'Are you sure?' } ,:class => "btn btn-mini btn-danger"%></td>
+  </tr>
+<% end %>
+</table>
+<%= will_paginate @businesses %>
+<br />
+

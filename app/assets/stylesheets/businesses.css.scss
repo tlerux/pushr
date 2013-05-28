@@ -1,0 +1,23 @@
+// Place all the styles related to the businesses controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+.right{
+  float:right;
+}
+.text-right {
+  text-align: right;
+}
+#header {
+  background-color: #333;
+  margin-bottom:20px;
+  ul{
+    li{
+      float: left;
+      padding: 10px 20px;
+      a{
+        color: white;
+      }
+    }
+  }
+}
+

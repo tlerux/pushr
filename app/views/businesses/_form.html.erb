@@ -1,0 +1,156 @@
+<%= form_for(@business) do |f| %>
+  <% if @business.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@business.errors.count, "error") %> prohibited this business from being saved:</h2>
+
+      <ul>
+      <% @business.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  
+  
+  
+<div class="row">
+	
+	
+	<div class="span6">
+		 	 
+		    
+				<div id="map-canvas" style="width: 90%; height: 500px;"></div> 
+			
+			 	
+			<a href="#" onclick=" gotoCurrent(); " class="btn">Goto Current Location</a>
+		 </div>
+	
+	<div class="span6">
+							  <div class="field">
+							    <%= f.label :name %>
+							    <%= f.text_field :name ,:class=>"span5"%>
+							  </div>
+							  <div class="field">
+							    <%= f.label :category %>
+							    <%= collection_select :business, :category_id , Category.all, :id, :name, :prompt => 'Select Category'%>
+							  </div>
+							  <div class="field">
+							    <%= f.label :phone %>
+							    <%= f.text_field :phone ,:class=>"span5"%>
+							  </div>
+							  <div class="field">
+							    <%= f.label :address %>
+							    <%= f.text_field :address ,:class=>"span5"%>
+							  </div>
+							   
+							    <%= f.hidden_field :latitude %>
+							    
+							    <%= f.hidden_field :zoom %>
+							  
+							    <%= f.hidden_field :longitude %>
+							     
+							  <div class="field">
+							    <%= f.label :email %>
+							    <%= f.text_field :email ,:class=>"span5"%>
+							  </div>
+							  <div class="field">
+							    <%= f.label :about %>
+							    <%= f.text_area :about ,:rows=>7 ,:class=>"span5"%>
+							  </div>
+							  <div class="field">
+							    <%= f.label :url %>
+							    <%= f.text_field :url ,:class=>"span5"%>
+							  </div>
+					
+					
+							  <div class="actions">
+							    <%= f.submit %>
+							  </div>
+					
+ </div>
+</div>
+<% end %>
+
+
+
+<script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCnUKN_hyzZGcVO8n6DkhXjNGvsjU78xo8&sensor=true">
+</script>
+
+
+<script type="text/javascript">
+
+var map;
+var marker;
+var geocoder = new google.maps.Geocoder();
+
+
+function initialize() {
+  	var myLatlng = new google.maps.LatLng(<%=@business.latitude%>, <%=@business.longitude %>)
+    var mapOptions = {
+      center: myLatlng,
+      zoom: 16,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    map = new google.maps.Map(document.getElementById("map-canvas"),
+        mapOptions);
+        
+   	marker = new google.maps.Marker({
+	      position: myLatlng,
+	      map: map, 
+	      draggable: true
+});
+
+
+	google.maps.event.addListener(marker, 'dragend', function() {
+	    geocodePosition(marker.getPosition());	
+		map.panTo(marker.getPosition());
+		$("#business_latitude").val(marker.getPosition().lat());
+		$("#business_longitude").val(marker.getPosition().lng());
+		$("#business_zoom").val(16);			 
+	}); 
+   <% if @business.zoom.nil? %>
+    gotoCurrent();    
+   <% end %>     
+  }
+  google.maps.event.addDomListener(window, 'load', initialize);
+
+
+function gotoCurrent(){
+		// Check for geolocation support
+		if (navigator.geolocation) {
+			
+			// Use method getCurrentPosition to get coordinates
+			navigator.geolocation.getCurrentPosition(function (position) {
+				 
+				var myLatLng = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+				$("#business_latitude").val(position.coords.latitude);
+				$("#business_longitude").val(position.coords.longitude);
+				 
+				$("#business_zoom").val(16);
+				marker.setPosition(myLatLng);
+				
+				map.panTo(myLatLng);
+				map.setZoom(16)	; 
+				geocodePosition(marker.getPosition()); 
+		});
+	}  
+}
+
+
+function geocodePosition(pos) {
+	  geocoder.geocode({
+		latLng: pos
+	  }, function(responses) {
+		if (responses && responses.length > 0) {
+		  $("#business_address").val(responses[0].formatted_address);	  
+		} else {
+		  updateMarkerAddress('Cannot determine address at this location.');
+		}
+  });
+}
+
+
+</script>
+
+ 	

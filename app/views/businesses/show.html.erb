@@ -1,0 +1,50 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Name:</b>
+  <%= @business.name %>
+</p>
+
+<p>
+  <b>Category:</b>
+  <%= @business.category.name if @business.category %>
+</p>
+
+<p>
+  <b>Phone:</b>
+  <%= @business.phone %>
+</p>
+
+<p>
+  <b>Address:</b>
+  <%= @business.address %>
+</p>
+
+<p>
+  <b>Latitude:</b>
+  <%= @business.latitude %>
+</p>
+
+<p>
+  <b>Longitude:</b>
+  <%= @business.longitude %>
+</p>
+
+<p>
+  <b>Email:</b>
+  <%= @business.email %>
+</p>
+
+<p>
+  <b>About:</b>
+  <%= @business.about %>
+</p>
+
+<p>
+  <b>Url:</b>
+  <%= @business.url %>
+</p>
+
+
+<%= link_to 'Edit', edit_business_path(@business) %> |
+<%= link_to 'Back', businesses_path %>
